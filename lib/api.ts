@@ -163,6 +163,7 @@ function matchZuSpiel(match: ApiSpiel): Spiel {
   const gruppe = match.group ?? match.stage ?? "Gruppenphase";
   const heimTore = match.score?.fullTime?.home ?? undefined;
   const gastTore = match.score?.fullTime?.away ?? undefined;
+  const stadion = match.venue?.trim() || "Austragungsort in den USA wird noch bestätigt";
 
   return {
     id: match.id,
@@ -173,7 +174,7 @@ function matchZuSpiel(match: ApiSpiel): Spiel {
     heimTore: heimTore === null ? undefined : heimTore,
     gastTore: gastTore === null ? undefined : gastTore,
     minute: match.minute,
-    stadion: match.venue ?? "Unbekanntes Stadion",
+    stadion,
     gruppe
   };
 }

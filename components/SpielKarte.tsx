@@ -75,7 +75,7 @@ export function SpielKarte(props: SpielKarteProps) {
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4 text-base text-slate-700">
         <div>
           <p className="font-semibold text-slate-900">{props.stadion}</p>
-          <p>{formatiereZeit(anpfiff)} Uhr in Wien</p>
+          <p>{formatiereZeit(anpfiff)} Uhr, Mitteleuropäische Zeit</p>
         </div>
         {props.kalenderHref ? (
           <Link href={props.kalenderHref} className="rounded-full bg-[var(--farb-primary)] px-4 py-3 text-sm font-bold text-white transition hover:bg-[var(--farb-primary-dunkel)]">
