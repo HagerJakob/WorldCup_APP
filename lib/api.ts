@@ -85,8 +85,8 @@ async function ladeJson<T>(pfad: string): Promise<T> {
   return (await antwort.json()) as T;
 }
 
-function normalizeText(text: string): string {
-  return text
+function normalizeText(text: string | null | undefined): string {
+  return String(text ?? "")
     .normalize("NFD")
     .replace(/\p{Diacritic}/gu, "")
     .toLowerCase();
