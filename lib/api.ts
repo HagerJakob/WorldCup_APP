@@ -53,12 +53,57 @@ type ApiStandingsAntwort = {
   }>;
 };
 
-const KENNZAHLEN_FUER_FLAGGE: Record<string, string> = {
-  deutschland: "🇩🇪",
-  germany: "🇩🇪",
-  osterreich: "🇦🇹",
-  oesterreich: "🇦🇹",
-  austria: "🇦🇹"
+const FLAGGEN_CODE_PRO_TEAM: Record<string, string> = {
+  algeria: "dz",
+  argentina: "ar",
+  australia: "au",
+  austria: "at",
+  belgium: "be",
+  bosniah: "ba",
+  brazil: "br",
+  canada: "ca",
+  capeverde: "cv",
+  colombia: "co",
+  congodr: "cd",
+  croatia: "hr",
+  curacao: "cw",
+  czechia: "cz",
+  ecuador: "ec",
+  egypt: "eg",
+  england: "gb-eng",
+  france: "fr",
+  germany: "de",
+  ghana: "gh",
+  haiti: "ht",
+  iran: "ir",
+  iraq: "iq",
+  ivorycoast: "ci",
+  japan: "jp",
+  jordan: "jo",
+  korearepublic: "kr",
+  mexico: "mx",
+  morocco: "ma",
+  netherlands: "nl",
+  newzealand: "nz",
+  norway: "no",
+  oesterreich: "at",
+  osterreich: "at",
+  panama: "pa",
+  paraguay: "py",
+  portugal: "pt",
+  qatar: "qa",
+  saudiarabia: "sa",
+  scotland: "gb-sct",
+  senegal: "sn",
+  southafrica: "za",
+  spain: "es",
+  sweden: "se",
+  switzerland: "ch",
+  tunisia: "tn",
+  turkey: "tr",
+  uruguay: "uy",
+  usa: "us",
+  uzbekistan: "uz"
 };
 
 function baueHeader(): Headers {
@@ -92,12 +137,19 @@ function normalizeText(text: string | null | undefined): string {
     .toLowerCase();
 }
 
-function flaggeAusName(name: string): string {
-  return KENNZAHLEN_FUER_FLAGGE[normalizeText(name)] ?? "🏳️";
+function normalisiereTeamSchluessel(name: string | null | undefined): string {
+  return normalizeText(name).replace(/[^a-z0-9]+/g, "");
+}
+
+function flaggeUrlAusName(name: string | null | undefined): string | undefined {
+  const schluessel = normalisiereTeamSchluessel(name);
+  const isoCode = FLAGGEN_CODE_PRO_TEAM[schluessel];
+
+  return isoCode ? `https://flagcdn.com/w80/${isoCode}.png` : undefined;
 }
 
 function teamZuMannschaft(team: ApiMannschaft): { id: number; name: string; kuerzel?: string; flagge: string } {
-  const flagge = team.area?.flag && team.area.flag.length > 0 ? team.area.flag : flaggeAusName(team.area?.name ?? team.name);
+  const flagge = flaggeUrlAusName(team.shortName ?? team.name) ?? team.crest ?? "🏳️";
 
   return {
     id: team.id,
