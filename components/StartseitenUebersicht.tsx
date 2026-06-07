@@ -175,7 +175,7 @@ export function StartseitenUebersicht() {
         <p className="text-sm font-bold uppercase tracking-[0.28em] text-white/70">Fußballfakt des Tages</p>
         <h2 className="mt-3 text-3xl font-black tracking-tight text-white">{fussballfakt}</h2>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-white/80">
-          Unterhalb kannst du zwischen Favoriten, Heute, Datum und Nächste Spiele wählen. Es werden immer maximal vier Spiele angezeigt und als 2x2-Kachelraster dargestellt.
+          Unterhalb kannst du zwischen Favoriten, Heute und Nächste Spiele wählen.
         </p>
 
         <div className="mt-6 flex flex-wrap gap-3">
