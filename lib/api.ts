@@ -106,6 +106,60 @@ const FLAGGEN_CODE_PRO_TEAM: Record<string, string> = {
   uzbekistan: "uz"
 };
 
+const TEAMNAME_AUF_DEUTSCH: Record<string, string> = {
+  algeria: "Algerien",
+  argentina: "Argentinien",
+  australia: "Australien",
+  austria: "Österreich",
+  belgium: "Belgien",
+  "bosnia-h": "Bosnien-Herzegowina",
+  bosniah: "Bosnien-Herzegowina",
+  brazil: "Brasilien",
+  canada: "Kanada",
+  capeverde: "Kap Verde",
+  colombia: "Kolumbien",
+  congodr: "DR Kongo",
+  croatia: "Kroatien",
+  curacao: "Curaçao",
+  czechia: "Tschechien",
+  ecuador: "Ecuador",
+  egypt: "Ägypten",
+  england: "England",
+  france: "Frankreich",
+  germany: "Deutschland",
+  ghana: "Ghana",
+  haiti: "Haiti",
+  iran: "Iran",
+  iraq: "Irak",
+  ivorycoast: "Elfenbeinküste",
+  japan: "Japan",
+  jordan: "Jordanien",
+  korearepublic: "Südkorea",
+  mexico: "Mexiko",
+  morocco: "Marokko",
+  netherlands: "Niederlande",
+  newzealand: "Neuseeland",
+  norway: "Norwegen",
+  oesterreich: "Österreich",
+  osterreich: "Österreich",
+  panama: "Panama",
+  paraguay: "Paraguay",
+  portugal: "Portugal",
+  qatar: "Katar",
+  saudiarabia: "Saudi-Arabien",
+  scotland: "Schottland",
+  senegal: "Senegal",
+  southafrica: "Südafrika",
+  spain: "Spanien",
+  sweden: "Schweden",
+  switzerland: "Schweiz",
+  tunisia: "Tunesien",
+  turkey: "Türkei",
+  uruguay: "Uruguay",
+  usa: "USA",
+  uzbekistan: "Usbekistan"
+};
+
 function baueHeader(): Headers {
   const token = process.env.FOOTBALL_DATA_API_KEY;
   if (!token) {
@@ -141,6 +195,11 @@ function normalisiereTeamSchluessel(name: string | null | undefined): string {
   return normalizeText(name).replace(/[^a-z0-9]+/g, "");
 }
 
+function uebersetzeTeamname(name: string | null | undefined): string {
+  const schluessel = normalisiereTeamSchluessel(name);
+  return TEAMNAME_AUF_DEUTSCH[schluessel] ?? String(name ?? "Unbekannt");
+}
+
 function flaggeUrlAusName(name: string | null | undefined): string | undefined {
   const schluessel = normalisiereTeamSchluessel(name);
   const isoCode = FLAGGEN_CODE_PRO_TEAM[schluessel];
@@ -153,7 +212,7 @@ function teamZuMannschaft(team: ApiMannschaft): { id: number; name: string; kuer
 
   return {
     id: team.id,
-    name: team.shortName ?? team.name,
+    name: uebersetzeTeamname(team.shortName ?? team.name),
     kuerzel: team.tla,
     flagge
   };
@@ -163,7 +222,6 @@ function matchZuSpiel(match: ApiSpiel): Spiel {
   const gruppe = match.group ?? match.stage ?? "Gruppenphase";
   const heimTore = match.score?.fullTime?.home ?? undefined;
   const gastTore = match.score?.fullTime?.away ?? undefined;
-  const stadion = match.venue?.trim() || "Austragungsort in den USA wird noch bestätigt";
 
   return {
     id: match.id,
@@ -174,7 +232,7 @@ function matchZuSpiel(match: ApiSpiel): Spiel {
     heimTore: heimTore === null ? undefined : heimTore,
     gastTore: gastTore === null ? undefined : gastTore,
     minute: match.minute,
-    stadion,
+    stadion: "",
     gruppe
   };
 }
