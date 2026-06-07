@@ -4,8 +4,9 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const filter = [
   { wert: "alle", beschriftung: "Alle" },
-  { wert: "deutschland", beschriftung: "Deutschland" },
-  { wert: "oesterreich", beschriftung: "Österreich" },
+  { wert: "heute", beschriftung: "Heute" },
+  { wert: "naechste", beschriftung: "Nächste" },
+  { wert: "live", beschriftung: "Live" },
   { wert: "favoriten", beschriftung: "Favoriten" }
 ];
 

@@ -303,19 +303,11 @@ export async function ladeSpieleMitFilter(bereich: string, filter?: string): Pro
   } else if (bereich === "live") {
     gefilterteSpiele = alleSpiele.filter((spiel) => spiel.status === "IN_PLAY" || spiel.status === "PAUSED");
   } else if (bereich === "favoriten") {
-    gefilterteSpiele = alleSpiele.filter(istFavoritSpiel);
-  }
-
-  if (filter === "deutschland") {
-    gefilterteSpiele = gefilterteSpiele.filter((spiel) => istDeutschland(spiel.heimTeam.name) || istDeutschland(spiel.gastTeam.name));
-  }
-
-  if (filter === "oesterreich") {
-    gefilterteSpiele = gefilterteSpiele.filter((spiel) => istOesterreich(spiel.heimTeam.name) || istOesterreich(spiel.gastTeam.name));
+    gefilterteSpiele = alleSpiele.slice(0, 8);
   }
 
   if (filter === "favoriten") {
-    gefilterteSpiele = sortiereFavoritenZuerst(gefilterteSpiele);
+    gefilterteSpiele = gefilterteSpiele.slice(0, 8);
   }
 
   return gefilterteSpiele;

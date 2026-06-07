@@ -44,7 +44,7 @@ function SpielListe({ spiele }: { spiele: Spiel[] }) {
 
 export function SpieleBereich({ bereich }: { bereich: "heute" | "naechste" | "alle" | "live" | "favoriten" }) {
   const suchParameter = useSearchParams();
-  const filter = (suchParameter.get("filter") ?? undefined) as "alle" | "deutschland" | "oesterreich" | "favoriten" | undefined;
+  const filter = (suchParameter.get("filter") ?? undefined) as "alle" | "heute" | "naechste" | "live" | "favoriten" | undefined;
   const { spiele, istLadend, fehler, zuletztAktualisiert } = useSpiele({ bereich, filter: filter === "alle" ? undefined : filter });
 
   if (fehler) {

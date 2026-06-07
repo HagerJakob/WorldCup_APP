@@ -7,7 +7,7 @@ type Filter = "alle" | "heute" | "naechste" | "live" | "favoriten";
 
 type Optionen = {
   bereich?: Filter;
-  filter?: "alle" | "deutschland" | "oesterreich" | "favoriten";
+  filter?: "alle" | "heute" | "naechste" | "live" | "favoriten";
   status?: string;
   teamId?: number;
 };
