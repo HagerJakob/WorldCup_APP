@@ -20,7 +20,7 @@ function istHeuteInWien(zeitpunkt: string | Date) {
   return tagInWien(zeitpunkt) === tagInWien(new Date());
 }
 
-function sortiereNachAnpfiff(spiele: Array<{ anpfiff: string }>) {
+function sortiereNachAnpfiff<T extends { anpfiff: string }>(spiele: T[]) {
   return [...spiele].sort((erstes, zweites) => new Date(erstes.anpfiff).getTime() - new Date(zweites.anpfiff).getTime());
 }
 
@@ -51,12 +51,7 @@ export function StartseitenUebersicht() {
       return sortierteSpiele.filter((spiel) => new Date(spiel.anpfiff).getTime() >= Date.now()).slice(0, 4);
     }
 
-    const favoriten = sortierteSpiele.filter((spiel) => {
-      const text = `${spiel.heimTeam.name} ${spiel.gastTeam.name}`.toLowerCase();
-      return text.includes("deutschland") || text.includes("germany") || text.includes("österreich") || text.includes("osterreich") || text.includes("austria");
-    });
-
-    return favoriten.slice(0, 4);
+    return sortierteSpiele.slice(0, 4);
   }, [ansicht, datum, spiele]);
 
   if (fehler) {
