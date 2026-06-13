@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
+import { baueIcsInhalt, ladeSpielNachId } from "../../server/data";
 
 type ApiRequest = IncomingMessage & {
   query?: Record<string, string | string[]>;
@@ -26,7 +27,6 @@ export default async function handler(request: ApiRequest, response: ServerRespo
   }
 
   try {
-    const { baueIcsInhalt, ladeSpielNachId } = await import("../../server/data");
     const spiel = await ladeSpielNachId(spielId);
     if (!spiel) {
       sendeJson(response, 404, { nachricht: "Spiel nicht gefunden." });

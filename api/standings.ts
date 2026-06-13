@@ -1,4 +1,5 @@
 import type { ServerResponse } from "node:http";
+import { ladeStandings } from "../server/data";
 
 function sendeJson(response: ServerResponse, status: number, daten: unknown) {
   response.statusCode = status;
@@ -9,7 +10,6 @@ function sendeJson(response: ServerResponse, status: number, daten: unknown) {
 
 export default async function handler(_request: unknown, response: ServerResponse) {
   try {
-    const { ladeStandings } = await import("../server/data");
     const daten = await ladeStandings();
     sendeJson(response, 200, { daten, zuletztAktualisiert: new Date().toISOString() });
   } catch (fehler) {
