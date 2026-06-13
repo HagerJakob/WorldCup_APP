@@ -1,121 +1,148 @@
-import { useMemo, useState } from "react";
-import { istFavoritenSpiel } from "../favoriten";
-import { tagInWien } from "../format";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { useFavoritenTeams } from "../hooks/useFavoritenTeams";
-import { useSpiele } from "../hooks/useSpiele";
-import { LadePlatzhalter } from "./LadePlatzhalter";
-import { SpielKarte } from "./SpielKarte";
-
-type StartseitenAnsicht = "favoriten" | "heute" | "datum" | "naechste";
 
 const fussballFakten = [
   "Brasilien ist das einzige Land, das seit der ersten WM 1930 an jeder Weltmeisterschaft teilgenommen hat.",
-  "Pelé ist der einzige Spieler, der drei Weltmeistertitel gewann.",
-  "Miroslav Klose ist mit 16 Treffern Rekordtorschütze der WM-Geschichte.",
-  "Die erste Fußball-WM fand 1930 in Uruguay statt.",
+  "Pele ist der einzige Spieler, der drei Weltmeistertitel gewann.",
+  "Miroslav Klose ist mit 16 Treffern Rekordtorschuetze der WM-Geschichte.",
+  "Die erste Fussball-WM fand 1930 in Uruguay statt.",
   "Die WM 2026 in den USA, Kanada und Mexiko wird erstmals mit 48 Teams ausgetragen.",
   "Marokko wurde 2022 als erstes afrikanisches Team WM-Halbfinalist.",
   "Deutschland besiegte Brasilien im Halbfinale der WM 2014 mit 7:1.",
   "Lionel Messi gewann mit Argentinien die WM 2022 in Katar."
 ];
 
-function istHeuteInWien(zeitpunkt: string | Date) {
-  return tagInWien(zeitpunkt) === tagInWien(new Date());
-}
+const wmStart = new Date("2026-06-11T00:00:00-05:00");
 
-function sortiereNachAnpfiff<T extends { anpfiff: string }>(spiele: T[]) {
-  return [...spiele].sort((a, b) => new Date(a.anpfiff).getTime() - new Date(b.anpfiff).getTime());
+const dashboardKarten = [
+  {
+    titel: "48 Teams",
+    text: "Zwoelf Gruppen mit je vier Mannschaften.",
+    farbe: "from-[#63f0d5]/24 to-[#0057ff]/18"
+  },
+  {
+    titel: "104 Spiele",
+    text: "Von der Gruppenphase bis zum Finale.",
+    farbe: "from-[#ff3d14]/24 to-[#e60000]/18"
+  },
+  {
+    titel: "16 KO-Pfade",
+    text: "Der Turnierbaum entsteht automatisch aus Tabelle und API.",
+    farbe: "from-[#b7f200]/24 to-[#6b00f5]/16"
+  }
+];
+
+const schnellzugriffe = [
+  { label: "Spielplan", href: "/spielplan", beschreibung: "Alle Matches chronologisch" },
+  { label: "Tabellen", href: "/tabelle", beschreibung: "Gruppen A bis L" },
+  { label: "KO-Runden", href: "/ko-runden", beschreibung: "Turnierbaum ansehen" },
+  { label: "Favoriten", href: "/favoriten", beschreibung: "Teams markieren" }
+];
+
+const gastgeber = [
+  { land: "Kanada", farbe: "bg-[#e60000]/18", detail: "Toronto & Vancouver" },
+  { land: "USA", farbe: "bg-[#0057ff]/18", detail: "Elf Gastgeber-Staedte" },
+  { land: "Mexiko", farbe: "bg-[#b7f200]/16", detail: "Mexiko-Stadt, Guadalajara, Monterrey" }
+];
+
+function berechneTageBisStart() {
+  const differenz = wmStart.getTime() - Date.now();
+  return Math.max(0, Math.ceil(differenz / (1000 * 60 * 60 * 24)));
 }
 
 export function StartseitenUebersicht() {
-  const [ansicht, setAnsicht] = useState<StartseitenAnsicht>("heute");
-  const [datum, setDatum] = useState(() => new Date().toISOString().slice(0, 10));
-  const { spiele, istLadend, fehler } = useSpiele({ bereich: "alle" });
-  const { favoritenSet } = useFavoritenTeams();
-  const fussballfakt = fussballFakten[new Date().getDate() % fussballFakten.length];
+  const [faktenIndex, setFaktenIndex] = useState(() => new Date().getDate() % fussballFakten.length);
+  const [tageBisStart, setTageBisStart] = useState(berechneTageBisStart);
+  const { favoritenIds } = useFavoritenTeams();
+  const fussballfakt = fussballFakten[faktenIndex];
+  const favoritenText = useMemo(() => {
+    if (favoritenIds.length === 0) return "Noch kein Team ausgewaehlt";
+    if (favoritenIds.length === 1) return "1 Team ausgewaehlt";
+    return `${favoritenIds.length} Teams ausgewaehlt`;
+  }, [favoritenIds.length]);
 
-  const gefilterteSpiele = useMemo(() => {
-    const sortierteSpiele = sortiereNachAnpfiff(spiele);
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setFaktenIndex((index) => (index + 1) % fussballFakten.length);
+      setTageBisStart(berechneTageBisStart());
+    }, 15000);
 
-    if (ansicht === "heute") return sortierteSpiele.filter((spiel) => istHeuteInWien(spiel.anpfiff)).slice(0, 4);
-    if (ansicht === "datum") return sortierteSpiele.filter((spiel) => tagInWien(spiel.anpfiff) === tagInWien(new Date(datum))).slice(0, 4);
-    if (ansicht === "naechste") return sortierteSpiele.filter((spiel) => new Date(spiel.anpfiff).getTime() >= Date.now()).slice(0, 4);
-    return sortierteSpiele.filter((spiel) => istFavoritenSpiel(spiel, favoritenSet)).slice(0, 4);
-  }, [ansicht, datum, favoritenSet, spiele]);
-
-  if (fehler) {
-    return (
-      <div className="glas-karte rounded-[1.75rem] p-6 text-white sm:p-8">
-        <p className="text-2xl font-black">Die Startseite konnte nicht geladen werden.</p>
-        <p className="mt-2 text-lg text-white/80">Bitte später noch einmal versuchen.</p>
-      </div>
-    );
-  }
-
-  if (istLadend) return <LadePlatzhalter zeilen={4} />;
+    return () => window.clearInterval(interval);
+  }, []);
 
   return (
     <section className="space-y-6">
       <div className="glas-karte rounded-[1.75rem] p-6 text-white sm:p-8">
-        <p className="text-sm font-bold uppercase tracking-[0.28em] text-white/70">Fußballfakt des Tages</p>
-        <h2 className="mt-3 text-3xl font-black tracking-tight text-white">{fussballfakt}</h2>
-        <p className="mt-4 max-w-3xl text-lg leading-8 text-white/80">Unterhalb kannst du zwischen Favoriten, Heute und Nächste Spiele wählen.</p>
-
-        <div className="mt-6 flex flex-wrap gap-3">
-          {[
-            { wert: "favoriten", label: "Favoriten" },
-            { wert: "heute", label: "Heute" },
-            { wert: "datum", label: "Datum" },
-            { wert: "naechste", label: "Nächste Spiele" }
-          ].map((eintrag) => {
-            const aktiv = ansicht === eintrag.wert;
-            return (
-              <button
-                key={eintrag.wert}
-                type="button"
-                onClick={() => setAnsicht(eintrag.wert as StartseitenAnsicht)}
-                className={`min-h-12 rounded-full px-5 py-3 text-sm font-black transition sm:text-base ${aktiv ? "bg-white text-[var(--farb-primary)]" : "border border-white/15 bg-white/10 text-white/85 hover:bg-white/15"}`}
-              >
-                {eintrag.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {ansicht === "datum" ? (
-          <div className="mt-5 max-w-xs">
-            <label className="mb-2 block text-sm font-semibold text-white/70" htmlFor="startseiten-datum">
-              Tag auswählen
-            </label>
-            <input id="startseiten-datum" type="date" value={datum} onChange={(event) => setDatum(event.target.value)} className="w-full rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-base font-semibold text-white outline-none ring-0" />
+        <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#b7f200]">United 2026</p>
+            <h2 className="mt-3 text-4xl font-black tracking-tight text-white sm:text-5xl">Deine WM-Zentrale</h2>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-white/80">Fakten, Countdown, Favoriten und schnelle Wege zu Spielplan, Tabellen und KO-Baum.</p>
           </div>
-        ) : null}
+          <div className="rounded-[1.5rem] border border-white/15 bg-white/10 p-5 text-right backdrop-blur">
+            <p className="text-sm font-bold uppercase tracking-[0.22em] text-white/65">Start in</p>
+            <p className="mt-2 text-6xl font-black leading-none">{tageBisStart}</p>
+            <p className="mt-1 text-lg font-black text-white/80">Tagen</p>
+          </div>
+        </div>
+        <div className="mt-6 rounded-[1.5rem] border border-white/12 bg-white/8 p-5">
+          <p className="text-sm font-bold uppercase tracking-[0.28em] text-white/70">Fussballfakt</p>
+          <h3 key={faktenIndex} className="wm-fakt-wechsel mt-3 text-2xl font-black tracking-tight text-white sm:text-3xl">
+            {fussballfakt}
+          </h3>
+          <p className="mt-3 text-base leading-7 text-white/72">Wechselt automatisch alle 15 Sekunden.</p>
+        </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {gefilterteSpiele.length ? (
-          gefilterteSpiele.map((spiel) => (
-            <SpielKarte
-              key={spiel.id}
-              heimTeam={spiel.heimTeam.name}
-              gastTeam={spiel.gastTeam.name}
-              heimFlagge={spiel.heimTeam.flagge ?? "🏳️"}
-              gastFlagge={spiel.gastTeam.flagge ?? "🏳️"}
-              anpfiff={spiel.anpfiff}
-              status={spiel.status}
-              heimTore={spiel.heimTore}
-              gastTore={spiel.gastTore}
-              minute={spiel.minute}
-              stadion={spiel.stadion}
-              gruppe={spiel.gruppe}
-            />
-          ))
-        ) : (
-          <div className="glas-karte rounded-[1.75rem] p-6 text-white sm:p-8 md:col-span-2">
-            <p className="text-xl font-black">Keine Spiele für diese Auswahl.</p>
-            <p className="mt-2 text-white/80">Wähle Favoriten aus oder nutze eine andere Ansicht.</p>
+      <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="glas-karte rounded-[1.75rem] p-6 text-white sm:p-8">
+          <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#b7f200]">Turnierstart</p>
+          <div className="mt-4 flex flex-wrap items-end gap-4">
+            <span className="text-7xl font-black leading-none tracking-tight sm:text-8xl">{tageBisStart}</span>
+            <div className="pb-2">
+              <p className="text-2xl font-black">Tage</p>
+              <p className="mt-1 text-base font-semibold text-white/75">bis zum WM-Auftakt am 11. Juni 2026</p>
+            </div>
           </div>
-        )}
+        </div>
+
+        <div className="glas-karte rounded-[1.75rem] p-6 text-white sm:p-8">
+          <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#63f0d5]">Deine WM</p>
+          <h3 className="mt-3 text-3xl font-black tracking-tight">{favoritenText}</h3>
+          <p className="mt-3 text-base leading-7 text-white/78">Markiere Teams mit Herz, dann kannst du ihre Spiele gezielt im Favoritenbereich verfolgen.</p>
+          <Link to="/favoriten" className="wm-aktionsbutton mt-5 inline-flex rounded-full px-5 py-3 text-sm font-black">
+            Favoriten bearbeiten
+          </Link>
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        {gastgeber.map((eintrag) => (
+          <article key={eintrag.land} className={`glas-karte rounded-[1.5rem] ${eintrag.farbe} p-5 text-white`}>
+            <p className="text-sm font-bold uppercase tracking-[0.22em] text-white/60">Gastgeber</p>
+            <h3 className="mt-2 text-3xl font-black tracking-tight">{eintrag.land}</h3>
+            <p className="mt-2 text-base font-semibold text-white/75">{eintrag.detail}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        {dashboardKarten.map((karte) => (
+          <article key={karte.titel} className={`glas-karte rounded-[1.5rem] bg-gradient-to-br ${karte.farbe} p-5 text-white`}>
+            <p className="text-3xl font-black tracking-tight">{karte.titel}</p>
+            <p className="mt-3 text-base font-semibold leading-7 text-white/78">{karte.text}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-4">
+        {schnellzugriffe.map((link) => (
+          <Link key={link.href} to={link.href} className="scharf-karte rounded-[1.25rem] p-4 transition hover:-translate-y-0.5 hover:shadow-[0_24px_70px_rgba(0,40,32,0.3)]">
+            <p className="text-lg font-black text-slate-950">{link.label}</p>
+            <p className="mt-1 text-sm font-semibold text-slate-700">{link.beschreibung}</p>
+          </Link>
+        ))}
       </div>
     </section>
   );

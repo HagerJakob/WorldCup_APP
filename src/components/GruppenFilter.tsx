@@ -22,7 +22,7 @@ export function GruppenFilter() {
             type="button"
             onClick={() => setSuchParameter({ filter: eintrag.wert })}
             className={`min-h-11 rounded-full border px-5 py-3 text-base font-semibold transition ${
-              aktiv ? "border-[var(--farb-primary)] bg-[var(--farb-primary)] text-white" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
+              aktiv ? "border-[#b7f200] bg-[#b7f200] text-[#034d3f] shadow-[0_0_28px_rgba(183,242,0,0.24)]" : "border-[#63f0d5]/30 bg-white/10 text-white/85 backdrop-blur hover:border-[#63f0d5]/55 hover:bg-white/16"
             }`}
           >
             {eintrag.beschriftung}

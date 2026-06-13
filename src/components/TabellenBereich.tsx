@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import { ladeTabellen } from "../api";
 import { formatiereAbschnittName } from "../format";
+import { useFavoritenTeams } from "../hooks/useFavoritenTeams";
 import type { Gruppe, TabellenZeile } from "../types";
 import { LadePlatzhalter } from "./LadePlatzhalter";
 
@@ -30,12 +31,15 @@ function sortiereGruppendritte(gruppen: Gruppe[]): DritterPlatz[] {
     .sort((a, b) => b.punkte - a.punkte || b.tordifferenz - a.tordifferenz || b.toreFuer - a.toreFuer || a.team.name.localeCompare(b.team.name, "de-AT"));
 }
 
-function TeamZelle({ zeile }: { zeile: TabellenZeile }) {
+function TeamZelle({ zeile, istFavorit }: { zeile: TabellenZeile; istFavorit?: boolean }) {
   return (
     <div className="flex items-center gap-3">
       <FlaggenBild wert={zeile.team.flagge} name={zeile.team.name} />
       <div>
-        <p className="text-lg font-black leading-tight text-white">{zeile.team.name}</p>
+        <p className="flex items-center gap-2 text-lg font-black leading-tight text-white">
+          <span>{zeile.team.name}</span>
+          {istFavorit ? <span className="text-sm text-[#b7f200]" title="Favorit">♥</span> : null}
+        </p>
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-white/65">{zeile.team.kuerzel ?? ""}</p>
       </div>
     </div>
@@ -44,6 +48,7 @@ function TeamZelle({ zeile }: { zeile: TabellenZeile }) {
 
 function GruppendritteTabelle({ gruppen }: { gruppen: Gruppe[] }) {
   const dritte = sortiereGruppendritte(gruppen);
+  const { favoritenSet } = useFavoritenTeams();
 
   return (
     <section className="glas-karte rounded-[1.75rem] p-5 text-white shadow-[0_18px_55px_rgba(15,23,42,0.16)] sm:p-6">
@@ -74,7 +79,7 @@ function GruppendritteTabelle({ gruppen }: { gruppen: Gruppe[] }) {
               <tr key={`${zeile.gruppe}-${zeile.team.id}`} className="border-b border-white/10 bg-white/6 text-white transition hover:bg-white/10">
                 <td className="px-4 py-4 align-middle font-black text-white/90">{index + 1}</td>
                 <td className="px-4 py-4 align-middle">
-                  <TeamZelle zeile={zeile} />
+                  <TeamZelle zeile={zeile} istFavorit={favoritenSet.has(zeile.team.id)} />
                 </td>
                 <td className="px-4 py-4 text-center font-semibold text-white/90">{zeile.gruppe}</td>
                 <td className="px-4 py-4 text-center font-semibold text-white/90">{zeile.spiele}</td>
@@ -99,6 +104,7 @@ export function TabellenBereich() {
     refreshInterval: 60000,
     revalidateOnFocus: true
   });
+  const { favoritenSet } = useFavoritenTeams();
 
   if (error) {
     return <div className="rounded-[1.5rem] border border-red-200 bg-red-50 p-6 text-base font-semibold text-red-900">Die Tabelle ist gerade nicht verfügbar.</div>;
@@ -141,7 +147,7 @@ export function TabellenBereich() {
                   <tr key={zeile.team.id} className="group border-b border-white/10 bg-white/6 text-white transition hover:bg-white/10">
                     <td className="px-4 py-4 align-middle font-black text-white/90">{zeile.platz}</td>
                     <td className="px-4 py-4 align-middle">
-                      <TeamZelle zeile={zeile} />
+                      <TeamZelle zeile={zeile} istFavorit={favoritenSet.has(zeile.team.id)} />
                     </td>
                     <td className="px-4 py-4 text-center font-semibold text-white/90">{zeile.spiele}</td>
                     <td className="px-4 py-4 text-center font-semibold text-white/90">{zeile.siege}</td>

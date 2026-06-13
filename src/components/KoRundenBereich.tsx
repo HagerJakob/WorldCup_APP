@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { ladeSpiele, ladeTabellen } from "../api";
+import { useFavoritenTeams } from "../hooks/useFavoritenTeams";
 import { generiereTurnierbaum, type KoSpiel, type KoTeilnehmer } from "../ko/turnierbaum";
 import { LadePlatzhalter } from "./LadePlatzhalter";
 
@@ -70,6 +71,9 @@ type Position = {
 };
 
 function TeilnehmerZeile({ teilnehmer }: { teilnehmer: KoTeilnehmer }) {
+  const { favoritenSet } = useFavoritenTeams();
+  const istFavorit = typeof teilnehmer.team?.id === "number" && favoritenSet.has(teilnehmer.team.id);
+
   return (
     <div className="flex min-h-11 items-center gap-3 rounded-2xl bg-white/8 px-3 py-2">
       {teilnehmer.team?.flagge ? (
@@ -84,7 +88,10 @@ function TeilnehmerZeile({ teilnehmer }: { teilnehmer: KoTeilnehmer }) {
         <span className="flex h-8 w-10 items-center justify-center rounded-lg border border-white/15 bg-white/8 text-xs font-black text-white/60">{teilnehmer.platz ? `${teilnehmer.platz}.` : "W"}</span>
       )}
       <div className="min-w-0">
-        <p className="truncate text-sm font-black text-white">{teilnehmer.label}</p>
+        <p className="flex items-center gap-2 text-sm font-black text-white">
+          <span className="truncate">{teilnehmer.label}</span>
+          {istFavorit ? <span className="shrink-0 text-xs text-[#b7f200]" title="Favorit">♥</span> : null}
+        </p>
         {teilnehmer.gruppe ? <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-white/55">Gruppe {teilnehmer.gruppe}</p> : null}
       </div>
     </div>
@@ -265,7 +272,7 @@ export function KoRundenBereich() {
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           {turnierbaum.besteDritte.map((dritter, index) => (
-            <span key={dritter.gruppe} className="rounded-full bg-[var(--farb-primary)] px-4 py-2 text-sm font-black text-white">
+            <span key={dritter.gruppe} className="rounded-full border border-[#b7f200]/55 bg-[#b7f200]/14 px-4 py-2 text-sm font-black text-[#efffe8] shadow-[0_0_20px_rgba(183,242,0,0.12)]">
               {index + 1}. {dritter.team.name} · Gruppe {dritter.gruppe}
             </span>
           ))}

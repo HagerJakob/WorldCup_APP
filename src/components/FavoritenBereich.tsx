@@ -68,7 +68,7 @@ export function FavoritenBereich() {
               value={suche}
               onChange={(event) => setSuche(event.target.value)}
               placeholder="z. B. Deutschland, Brasilien..."
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-base font-semibold text-slate-900 outline-none transition focus:border-[var(--farb-primary)] focus:ring-4 focus:ring-blue-100"
+              className="w-full rounded-2xl border border-white/20 bg-white/12 px-4 py-3 text-base font-semibold text-white outline-none transition placeholder:text-white/50 focus:border-[#63f0d5] focus:ring-4 focus:ring-[#63f0d5]/15"
             />
           </label>
         </div>
@@ -76,7 +76,7 @@ export function FavoritenBereich() {
         {ausgewaehlteTeams.length ? (
           <div className="mt-5 flex flex-wrap gap-2">
             {ausgewaehlteTeams.map((team) => (
-              <span key={team.id} className="inline-flex items-center gap-2 rounded-full bg-[var(--farb-primary)] px-4 py-2 text-sm font-black text-white">
+              <span key={team.id} className="inline-flex items-center gap-2 rounded-full border border-[#b7f200]/55 bg-[#b7f200]/14 px-4 py-2 text-sm font-black text-[#efffe8] shadow-[0_0_20px_rgba(183,242,0,0.12)]">
                 <span aria-hidden="true">♥</span>
                 {team.name}
               </span>
@@ -105,7 +105,7 @@ export function FavoritenBereich() {
                 aria-label={aktiv ? `${team.name} nicht mehr unterstützen` : `${team.name} unterstützen`}
                 title={aktiv ? "Nicht mehr unterstützen" : "Team unterstützen"}
                 className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full border text-2xl font-black transition ${
-                  aktiv ? "border-[var(--farb-akzent)] bg-[var(--farb-akzent)] text-white shadow-[0_0_0_6px_rgba(210,36,73,0.16)]" : "border-white/20 bg-white/10 text-white/80 hover:bg-white/15 hover:text-white"
+                  aktiv ? "border-[#b7f200]/70 bg-[#b7f200]/16 text-[#efffe8] shadow-[0_0_24px_rgba(183,242,0,0.2)]" : "border-white/20 bg-white/10 text-white/80 hover:bg-white/15 hover:text-white"
                 }`}
               >
                 {aktiv ? "♥" : "♡"}
@@ -115,7 +115,7 @@ export function FavoritenBereich() {
         })}
       </div>
 
-      {gefilterteTeams.length === 0 ? <div className="rounded-[1.5rem] border border-slate-200 bg-white p-6 text-base font-semibold text-slate-700">Kein Team für diese Suche gefunden.</div> : null}
+      {gefilterteTeams.length === 0 ? <div className="scharf-karte rounded-[1.5rem] p-6 text-base font-semibold text-white/80">Kein Team für diese Suche gefunden.</div> : null}
     </div>
   );
 }

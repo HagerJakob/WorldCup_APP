@@ -20,7 +20,7 @@ export function Navigation() {
             end={eintrag.href === "/"}
             className={({ isActive }) =>
               `flex min-h-12 shrink-0 items-center justify-center rounded-full px-4 py-3 text-sm font-bold transition sm:px-5 sm:text-base ${
-                isActive ? "bg-white text-[var(--farb-primary)] shadow-[0_10px_30px_rgba(255,255,255,0.28)]" : "text-white/80 hover:bg-white/10 hover:text-white"
+                isActive ? "wm-aktionsbutton" : "text-white/80 hover:bg-white/10 hover:text-white"
               }`
             }
           >

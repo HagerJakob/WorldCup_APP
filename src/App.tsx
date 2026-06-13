@@ -9,17 +9,17 @@ import { TabellenBereich } from "./components/TabellenBereich";
 export function App() {
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-50 border-b border-white/20 bg-[rgba(8,16,31,0.72)] px-4 py-4 text-white backdrop-blur-2xl sm:px-6 lg:px-10">
+      <header className="sticky top-0 z-50 border-b border-[#63f0d5]/30 bg-[rgba(0,70,56,0.78)] px-4 py-4 text-white shadow-[0_18px_70px_rgba(0,31,25,0.34)] backdrop-blur-2xl sm:px-6 lg:px-10">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <img src="/wm-ball.svg" alt="WM 2026" width={52} height={52} />
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.34em] text-white/65">WM 2026</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#b7f200]">FIFA World Cup 2026</p>
                 <h1 className="mt-1 text-2xl font-black tracking-tight text-white sm:text-3xl">Spielplan & Tabellen</h1>
               </div>
             </div>
-            <div className="hidden rounded-full border border-white/15 bg-white/8 px-4 py-2 text-sm font-semibold text-white/85 shadow-[0_12px_35px_rgba(0,0,0,0.12)] md:flex">Glasig, klar, kontrastreich</div>
+            <div className="hidden rounded-full border border-[#63f0d5]/35 bg-[#63f0d5]/12 px-4 py-2 text-sm font-semibold text-[#efffe8] shadow-[0_0_32px_rgba(99,240,213,0.2)] md:flex">Powered by football-data.org</div>
           </div>
           <Navigation />
         </div>
@@ -76,7 +76,7 @@ function FavoritenSeite() {
 function TabelleSeite() {
   return (
     <section className="space-y-6">
-      <div className="scharf-karte rounded-[1.75rem] border border-slate-200 p-6 sm:p-8">
+      <div className="scharf-karte rounded-[1.75rem] p-6 sm:p-8">
         <p className="text-sm font-bold uppercase tracking-[0.28em] text-[var(--farb-primary)]">Gruppentabelle</p>
         <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900">Alle Gruppen A bis L</h2>
         <p className="mt-4 text-lg leading-8 text-slate-700">Die Tabelle ist bewusst groß gesetzt, damit Platzierung, Punkte und Tordifferenz sofort erkennbar sind.</p>
@@ -89,7 +89,7 @@ function TabelleSeite() {
 function EinstellungenSeite() {
   return (
     <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-      <div className="scharf-karte rounded-[1.75rem] border border-slate-200 p-6 sm:p-8">
+      <div className="scharf-karte rounded-[1.75rem] p-6 sm:p-8">
         <p className="text-sm font-bold uppercase tracking-[0.28em] text-[var(--farb-primary)]">Einstellungen</p>
         <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900">Weniger Ablenkung, mehr Übersicht</h2>
         <div className="mt-5 space-y-4 text-lg leading-8 text-slate-700">
@@ -98,7 +98,7 @@ function EinstellungenSeite() {
           <p>Die Kalenderdatei kann bei jedem Spiel direkt geöffnet werden.</p>
         </div>
       </div>
-      <div className="scharf-karte flex items-center justify-center rounded-[1.75rem] border border-slate-200 p-8">
+      <div className="scharf-karte flex items-center justify-center rounded-[1.75rem] p-8">
         <div className="text-center">
           <img src="/wm-ball.svg" alt="WM 2026 Symbol" width={140} height={140} className="mx-auto" />
           <p className="mt-4 text-lg font-bold text-slate-900">Verlässliche Darstellung</p>

@@ -17,13 +17,15 @@ function SpielListe({ spiele }: { spiele: Spiel[] }) {
     <div className="space-y-8">
       {gruppen.map((gruppe) => (
         <section key={gruppe.tag} className="space-y-4">
-          <h2 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">{gruppe.tag}</h2>
+          <h2 className="text-2xl font-black tracking-tight text-white drop-shadow-[0_3px_16px_rgba(0,0,0,0.28)] sm:text-3xl">{gruppe.tag}</h2>
           <div className="grid gap-4">
             {gruppe.spiele.map((spiel) => (
               <SpielKarte
                 key={spiel.id}
                 heimTeam={spiel.heimTeam.name}
                 gastTeam={spiel.gastTeam.name}
+                heimTeamId={spiel.heimTeam.id}
+                gastTeamId={spiel.gastTeam.id}
                 heimFlagge={spiel.heimTeam.flagge ?? "🏳️"}
                 gastFlagge={spiel.gastTeam.flagge ?? "🏳️"}
                 anpfiff={spiel.anpfiff}
@@ -70,7 +72,7 @@ export function SpieleBereich({ bereich }: { bereich: "heute" | "naechste" | "al
       <div className="flex flex-wrap items-center justify-between gap-4">
         <GruppenFilter />
         {zuletztAktualisiert ? (
-          <div className="flex items-center gap-3 rounded-2xl bg-[var(--farb-karton)] px-4 py-3 text-sm font-semibold text-slate-700">
+          <div className="flex items-center gap-3 rounded-2xl border border-cyan-200/25 bg-white/12 px-4 py-3 text-sm font-semibold text-white/85 backdrop-blur">
             <span>Zuletzt aktualisiert: {new Intl.DateTimeFormat("de-AT", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Vienna" }).format(new Date(zuletztAktualisiert))}</span>
             <LiveBadge />
           </div>
@@ -78,7 +80,7 @@ export function SpieleBereich({ bereich }: { bereich: "heute" | "naechste" | "al
       </div>
 
       <SpielListe spiele={angezeigteSpiele} />
-      {angezeigteSpiele.length === 0 ? <div className="rounded-[1.5rem] border border-slate-200 bg-white p-6 text-base font-semibold text-slate-700">Für diesen Bereich gibt es gerade keine Spiele mit deinen favorisierten Teams.</div> : null}
+      {angezeigteSpiele.length === 0 ? <div className="scharf-karte rounded-[1.5rem] p-6 text-base font-semibold text-white/80">Für diesen Bereich gibt es gerade keine Spiele mit deinen favorisierten Teams.</div> : null}
     </div>
   );
 }
