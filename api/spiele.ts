@@ -1,5 +1,4 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { ladeSpieleMitFilter } from "../server/data";
 
 type ApiRequest = IncomingMessage & {
   query?: Record<string, string | string[]>;
@@ -22,6 +21,7 @@ export default async function handler(request: ApiRequest, response: ServerRespo
   const filter = ersterWert(request.query?.filter) ?? url.searchParams.get("filter") ?? undefined;
 
   try {
+    const { ladeSpieleMitFilter } = await import("../server/data");
     const spiele = await ladeSpieleMitFilter(bereich, filter);
     sendeJson(response, 200, { daten: spiele, zuletztAktualisiert: new Date().toISOString() });
   } catch (fehler) {
