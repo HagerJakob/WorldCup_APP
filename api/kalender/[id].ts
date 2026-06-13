@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { baueIcsInhalt, ladeSpielNachId } from "../../server/data.ts";
+import { baueIcsInhalt, ladeSpielNachId } from "../_data.js";
 
 type ApiRequest = IncomingMessage & {
   query?: Record<string, string | string[]>;

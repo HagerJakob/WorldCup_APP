@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { ladeSpieleMitFilter } from "../server/data.ts";
+import { ladeSpieleMitFilter } from "./_data.js";
 
 type ApiRequest = IncomingMessage & {
   query?: Record<string, string | string[]>;

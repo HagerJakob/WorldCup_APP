@@ -1,5 +1,5 @@
 import type { ServerResponse } from "node:http";
-import { ladeStandings } from "../server/data.ts";
+import { ladeStandings } from "./_data.js";
 
 function sendeJson(response: ServerResponse, status: number, daten: unknown) {
   response.statusCode = status;
