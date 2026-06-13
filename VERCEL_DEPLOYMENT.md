@@ -39,6 +39,13 @@ Nach dem Import startet Vercel automatisch den ersten Deploy. Bei spaeteren Aend
 - `/api/standings` liefert JSON.
 - Ein Kalender-Link in einer Spielkarte oeffnet eine `.ics` Datei.
 
+Wenn Spiele, Tabellen, KO-Runden oder Favoriten nicht laden:
+
+1. In Vercel pruefen, ob `FOOTBALL_DATA_API_KEY` wirklich fuer `Production` gesetzt ist.
+2. Danach unter `Deployments` den letzten Deploy nochmal ausloesen.
+3. Direkt im Browser `/api/spiele?bereich=alle` oeffnen.
+4. Wenn dort eine Fehlermeldung steht, in Vercel `Project` -> `Logs` die Function-Logs ansehen.
+
 ## Lokal weiterentwickeln
 
 ```bash
