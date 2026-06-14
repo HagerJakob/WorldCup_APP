@@ -14,10 +14,10 @@ function SpielListe({ spiele }: { spiele: Spiel[] }) {
   const gruppen = gruppiereNachTag(spiele);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {gruppen.map((gruppe) => (
-        <section key={gruppe.tag} className="space-y-4">
-          <h2 className="text-2xl font-black tracking-tight text-white drop-shadow-[0_3px_16px_rgba(0,0,0,0.28)] sm:text-3xl">{gruppe.tag}</h2>
+        <section key={gruppe.tag} className="space-y-3 sm:space-y-4">
+          <h2 className="text-xl font-black tracking-tight text-white drop-shadow-[0_3px_16px_rgba(0,0,0,0.28)] sm:text-3xl">{gruppe.tag}</h2>
           <div className="grid gap-4">
             {gruppe.spiele.map((spiel) => (
               <SpielKarte
@@ -69,10 +69,10 @@ export function SpieleBereich({ bereich }: { bereich: "heute" | "naechste" | "al
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
         <GruppenFilter />
         {zuletztAktualisiert ? (
-          <div className="flex items-center gap-3 rounded-2xl border border-cyan-200/25 bg-white/12 px-4 py-3 text-sm font-semibold text-white/85 backdrop-blur">
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-cyan-200/25 bg-white/12 px-4 py-3 text-sm font-semibold text-white/85 backdrop-blur sm:justify-start">
             <span>Zuletzt aktualisiert: {new Intl.DateTimeFormat("de-AT", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Vienna" }).format(new Date(zuletztAktualisiert))}</span>
             <LiveBadge />
           </div>

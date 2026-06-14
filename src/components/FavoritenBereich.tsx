@@ -6,14 +6,14 @@ import { LadePlatzhalter } from "./LadePlatzhalter";
 
 function FlaggenBild({ wert, name }: { wert?: string; name: string }) {
   if (!wert) {
-    return <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-2xl">🏳️</span>;
+    return <span className="flex h-10 w-14 shrink-0 items-center justify-center rounded-xl bg-white/15 text-2xl sm:h-12 sm:w-16">🏳️</span>;
   }
 
   if (wert.startsWith("http://") || wert.startsWith("https://")) {
-    return <img src={wert} alt={name} className="h-12 w-12 rounded-2xl border border-white/30 object-cover shadow-sm" loading="lazy" />;
+    return <img src={wert} alt={name} className="h-10 w-14 shrink-0 rounded-xl border border-white/30 object-cover shadow-sm sm:h-12 sm:w-16" loading="lazy" />;
   }
 
-  return <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-2xl">{wert}</span>;
+  return <span className="flex h-10 w-14 shrink-0 items-center justify-center rounded-xl bg-white/15 text-2xl sm:h-12 sm:w-16">{wert}</span>;
 }
 
 function istEchtesTeam(team: Mannschaft) {

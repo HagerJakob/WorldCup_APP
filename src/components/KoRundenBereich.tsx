@@ -232,6 +232,36 @@ function BracketRaster({ spiele }: { spiele: KoSpiel[] }) {
   );
 }
 
+function MobileRundenListe({ spiele }: { spiele: KoSpiel[] }) {
+  const runden = [...BRACKET_RUNDEN.map((runde) => runde.runde), "Spiel um Platz 3" as KoSpiel["runde"]];
+
+  return (
+    <div className="space-y-5 md:hidden">
+      {runden.map((runde) => {
+        const spieleDerRunde = spiele
+          .filter((spiel) => spiel.runde === runde)
+          .sort((a, b) => MATCH_REIHENFOLGE[runde].indexOf(a.nummer) - MATCH_REIHENFOLGE[runde].indexOf(b.nummer));
+
+        if (spieleDerRunde.length === 0) return null;
+
+        return (
+          <section key={runde} className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <h3 className="text-xl font-black tracking-tight text-white drop-shadow-[0_3px_16px_rgba(0,0,0,0.28)]">{runde}</h3>
+              <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-black text-white/80">{spieleDerRunde.length} Spiele</span>
+            </div>
+            <div className="grid gap-3">
+              {spieleDerRunde.map((spiel) => (
+                <MatchKarte key={spiel.nummer} spiel={spiel} />
+              ))}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
 export function KoRundenBereich() {
   const {
     data: tabellenData,
@@ -283,11 +313,14 @@ export function KoRundenBereich() {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.22em] text-[var(--farb-primary)]">Turnierbaum</p>
-            <h2 className="mt-1 text-3xl font-black tracking-tight text-slate-900">KO-Runden-Bracket</h2>
+            <h2 className="mt-1 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">KO-Runden-Bracket</h2>
           </div>
-          <p className="text-sm font-semibold text-slate-600">Horizontal scrollen, um den ganzen Baum zu sehen.</p>
+          <p className="text-sm font-semibold text-slate-600">Am Handy nach Runden sortiert, am Desktop als kompletter Baum.</p>
         </div>
-        <BracketRaster spiele={turnierbaum.spiele} />
+        <MobileRundenListe spiele={turnierbaum.spiele} />
+        <div className="hidden md:block">
+          <BracketRaster spiele={turnierbaum.spiele} />
+        </div>
       </section>
     </div>
   );

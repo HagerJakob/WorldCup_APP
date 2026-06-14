@@ -267,3 +267,23 @@ img {
     stroke: rgba(255, 255, 255, 0.26);
   }
 }
+
+@media (max-width: 640px) {
+  body::before {
+    clip-path: polygon(0 0, 100% 0, 100% 16%, 72% 16%, 63% 30%, 100% 44%, 100% 100%, 0 100%, 0 84%, 32% 62%, 0 38%);
+    opacity: 0.62;
+  }
+
+  body::after {
+    left: -54vw;
+    top: 18vh;
+    width: 190vw;
+    height: 62vh;
+    opacity: 0.24;
+  }
+
+  .glas-karte,
+  .scharf-karte {
+    box-shadow: 0 14px 42px rgba(0, 26, 21, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+}

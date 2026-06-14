@@ -21,7 +21,7 @@ export interface SpielKarteProps {
 }
 
 function FlaggenSymbol({ wert, name }: { wert: string; name: string }) {
-  const basisKlasse = "flex h-12 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/40 bg-white/12 shadow-sm";
+  const basisKlasse = "flex h-10 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/40 bg-white/12 shadow-sm sm:h-12 sm:w-16";
 
   if (wert.startsWith("http://") || wert.startsWith("https://")) {
     return (
@@ -32,7 +32,7 @@ function FlaggenSymbol({ wert, name }: { wert: string; name: string }) {
   }
 
   return (
-    <span className={`${basisKlasse} text-3xl`} aria-label={name}>
+    <span className={`${basisKlasse} text-2xl sm:text-3xl`} aria-label={name}>
       {wert}
     </span>
   );
@@ -75,7 +75,7 @@ export function SpielKarte(props: SpielKarteProps) {
   });
 
   return (
-    <article className="glas-karte flex flex-col gap-5 rounded-[1.75rem] p-5 text-white sm:p-6">
+    <article className="glas-karte flex flex-col gap-4 rounded-[1.35rem] p-4 text-white sm:gap-5 sm:rounded-[1.75rem] sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-sm font-bold text-white/85">
           <span>{abschnitt}</span>
@@ -89,27 +89,27 @@ export function SpielKarte(props: SpielKarteProps) {
         {istLive ? <LiveBadge /> : <span className="rounded-full border border-white/12 bg-white/8 px-3 py-2 text-sm font-semibold text-white/75">{formatiereLiveStatus(props.status, props.minute)}</span>}
       </div>
 
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 rounded-[1.5rem] border border-white/10 bg-white/8 px-4 py-4 backdrop-blur-sm">
+      <div className="grid grid-cols-1 items-center gap-3 rounded-[1.2rem] border border-white/10 bg-white/8 px-3 py-3 backdrop-blur-sm sm:grid-cols-[1fr_auto_1fr] sm:gap-4 sm:rounded-[1.5rem] sm:px-4 sm:py-4">
         <div className="relative flex min-w-0 items-center gap-3 overflow-hidden rounded-2xl px-2 py-2">
           <ErgebnisGlanz rolle={heimRolle} seite="links" />
           <div className="relative z-10">
             <FlaggenSymbol wert={props.heimFlagge} name={props.heimTeam} />
           </div>
           <div className="relative z-10 min-w-0">
-            <p className="flex items-center gap-2 text-xl font-black leading-tight text-white sm:text-2xl">
+            <p className="flex items-center gap-2 text-lg font-black leading-tight text-white sm:text-2xl">
               <span className="truncate">{props.heimTeam}</span>
               {heimFavorit ? <span className="shrink-0 text-base text-[#b7f200]" title="Favorit">{"\u2665"}</span> : null}
             </p>
           </div>
         </div>
 
-        <div className="text-center">
+        <div className="rounded-2xl border border-white/10 bg-white/8 px-3 py-2 text-center sm:border-0 sm:bg-transparent sm:px-0 sm:py-0">
           {istBeendet ? (
-            <div className="text-4xl font-black tracking-tight text-white sm:text-5xl">
+            <div className="text-3xl font-black tracking-tight text-white sm:text-5xl">
               {props.heimTore ?? "-"}:{props.gastTore ?? "-"}
             </div>
           ) : (
-            <div className="text-2xl font-black tracking-tight text-white/90 sm:text-3xl">gegen</div>
+            <div className="text-xl font-black tracking-tight text-white/90 sm:text-3xl">gegen</div>
           )}
           {istLive && props.minute ? <p className="mt-1 text-sm font-semibold text-[#ff92a1]">{props.minute}. Minute</p> : null}
         </div>
@@ -117,7 +117,7 @@ export function SpielKarte(props: SpielKarteProps) {
         <div className="relative flex min-w-0 justify-end gap-3 overflow-hidden rounded-2xl px-2 py-2 text-right">
           <ErgebnisGlanz rolle={gastRolle} seite="rechts" />
           <div className="relative z-10 min-w-0">
-            <p className="flex items-center justify-end gap-2 text-xl font-black leading-tight text-white sm:text-2xl">
+            <p className="flex items-center justify-end gap-2 text-lg font-black leading-tight text-white sm:text-2xl">
               {gastFavorit ? <span className="shrink-0 text-base text-[#b7f200]" title="Favorit">{"\u2665"}</span> : null}
               <span className="truncate">{props.gastTeam}</span>
             </p>
@@ -128,9 +128,9 @@ export function SpielKarte(props: SpielKarteProps) {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4 text-base text-white/80">
+      <div className="flex flex-col items-stretch justify-between gap-3 border-t border-white/10 pt-4 text-base text-white/80 sm:flex-row sm:items-center">
         <p className="text-sm font-semibold tracking-wide">Anpfiff {formatiereDatumZeit(anpfiff)} Uhr</p>
-        <a href={kalenderHref} target="_blank" rel="noreferrer" className="wm-aktionsbutton rounded-full px-4 py-3 text-sm font-black">
+        <a href={kalenderHref} target="_blank" rel="noreferrer" className="wm-aktionsbutton inline-flex justify-center rounded-full px-4 py-3 text-sm font-black">
           In Google Kalender
         </a>
       </div>
